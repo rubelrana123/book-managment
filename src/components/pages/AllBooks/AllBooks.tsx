@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,134 +22,142 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Edit, Trash2, BookPlus, Eye, Plus } from "lucide-react";
-const books = [
-  {
-    id: "1",
-    title: "Atomic Habits",
-    author: "James Clear",
-    genre: "Self-help",
-    isbn: "9780735211292",
-    description: "A guide to building good habits and breaking bad ones.",
-    copies: 5,
-    available: true,
-    createdAt: new Date("2024-01-01"),
-    updatedAt: new Date("2024-01-10"),
-  },
-  {
-    id: "2",
-    title: "The Alchemist",
-    author: "Paulo Coelho",
-    genre: "Fiction",
-    isbn: "9780061122415",
-    description:
-      "A philosophical story about a boy's journey to fulfill his dream.",
-    copies: 3,
-    available: true,
-    createdAt: new Date("2024-02-10"),
-    updatedAt: new Date("2024-02-15"),
-  },
-  {
-    id: "3",
-    title: "1984",
-    author: "George Orwell",
-    genre: "Dystopian",
-    isbn: "9780451524935",
-    description: "A novel about a totalitarian regime and surveillance.",
-    copies: 4,
-    available: false,
-    createdAt: new Date("2024-03-05"),
-    updatedAt: new Date("2024-03-08"),
-  },
-  {
-    id: "4",
-    title: "Clean Code",
-    author: "Robert C. Martin",
-    genre: "Programming",
-    isbn: "9780132350884",
-    description: "Best practices for writing clean, maintainable code.",
-    copies: 6,
-    available: true,
-    createdAt: new Date("2024-04-01"),
-    updatedAt: new Date("2024-04-03"),
-  },
-  {
-    id: "5",
-    title: "The Pragmatic Programmer",
-    author: "Andy Hunt & Dave Thomas",
-    genre: "Programming",
-    isbn: "9780201616224",
-    description: "Tips and techniques for effective software development.",
-    copies: 2,
-    available: false,
-    createdAt: new Date("2024-04-15"),
-    updatedAt: new Date("2024-04-18"),
-  },
-  {
-    id: "6",
-    title: "Rich Dad Poor Dad",
-    author: "Robert Kiyosaki",
-    genre: "Finance",
-    isbn: "9781612680194",
-    description: "Lessons on financial independence and wealth building.",
-    copies: 7,
-    available: true,
-    createdAt: new Date("2024-05-01"),
-    updatedAt: new Date("2024-05-05"),
-  },
-  {
-    id: "7",
-    title: "Deep Work",
-    author: "Cal Newport",
-    genre: "Productivity",
-    isbn: "9781455586691",
-    description: "Strategies for focused success in a distracted world.",
-    copies: 4,
-    available: true,
-    createdAt: new Date("2024-05-20"),
-    updatedAt: new Date("2024-05-25"),
-  },
-  {
-    id: "8",
-    title: "To Kill a Mockingbird",
-    author: "Harper Lee",
-    genre: "Classic",
-    isbn: "9780061120084",
-    description: "A story of racial injustice and childhood innocence.",
-    copies: 3,
-    available: false,
-    createdAt: new Date("2024-06-01"),
-    updatedAt: new Date("2024-06-03"),
-  },
-  {
-    id: "9",
-    title: "The Lean Startup",
-    author: "Eric Ries",
-    genre: "Business",
-    isbn: "9780307887894",
-    description: "Entrepreneurship and innovation strategies for startups.",
-    copies: 5,
-    available: true,
-    createdAt: new Date("2024-06-10"),
-    updatedAt: new Date("2024-06-12"),
-  },
-  {
-    id: "10",
-    title: "You Don’t Know JS",
-    author: "Kyle Simpson",
-    genre: "Programming",
-    isbn: "9781491904244",
-    description: "In-depth explanation of JavaScript concepts.",
-    copies: 6,
-    available: true,
-    createdAt: new Date("2024-06-20"),
-    updatedAt: new Date("2024-06-25"),
-  },
-];
+import { useGetAllbookQuery } from "@/redux/api/bookApi";
+// const books = [
+//   {
+//     id: "1",
+//     title: "Atomic Habits",
+//     author: "James Clear",
+//     genre: "Self-help",
+//     isbn: "9780735211292",
+//     description: "A guide to building good habits and breaking bad ones.",
+//     copies: 5,
+//     available: true,
+//     createdAt: new Date("2024-01-01"),
+//     updatedAt: new Date("2024-01-10"),
+//   },
+//   {
+//     id: "2",
+//     title: "The Alchemist",
+//     author: "Paulo Coelho",
+//     genre: "Fiction",
+//     isbn: "9780061122415",
+//     description:
+//       "A philosophical story about a boy's journey to fulfill his dream.",
+//     copies: 3,
+//     available: true,
+//     createdAt: new Date("2024-02-10"),
+//     updatedAt: new Date("2024-02-15"),
+//   },
+//   {
+//     id: "3",
+//     title: "1984",
+//     author: "George Orwell",
+//     genre: "Dystopian",
+//     isbn: "9780451524935",
+//     description: "A novel about a totalitarian regime and surveillance.",
+//     copies: 4,
+//     available: false,
+//     createdAt: new Date("2024-03-05"),
+//     updatedAt: new Date("2024-03-08"),
+//   },
+//   {
+//     id: "4",
+//     title: "Clean Code",
+//     author: "Robert C. Martin",
+//     genre: "Programming",
+//     isbn: "9780132350884",
+//     description: "Best practices for writing clean, maintainable code.",
+//     copies: 6,
+//     available: true,
+//     createdAt: new Date("2024-04-01"),
+//     updatedAt: new Date("2024-04-03"),
+//   },
+//   {
+//     id: "5",
+//     title: "The Pragmatic Programmer",
+//     author: "Andy Hunt & Dave Thomas",
+//     genre: "Programming",
+//     isbn: "9780201616224",
+//     description: "Tips and techniques for effective software development.",
+//     copies: 2,
+//     available: false,
+//     createdAt: new Date("2024-04-15"),
+//     updatedAt: new Date("2024-04-18"),
+//   },
+//   {
+//     id: "6",
+//     title: "Rich Dad Poor Dad",
+//     author: "Robert Kiyosaki",
+//     genre: "Finance",
+//     isbn: "9781612680194",
+//     description: "Lessons on financial independence and wealth building.",
+//     copies: 7,
+//     available: true,
+//     createdAt: new Date("2024-05-01"),
+//     updatedAt: new Date("2024-05-05"),
+//   },
+//   {
+//     id: "7",
+//     title: "Deep Work",
+//     author: "Cal Newport",
+//     genre: "Productivity",
+//     isbn: "9781455586691",
+//     description: "Strategies for focused success in a distracted world.",
+//     copies: 4,
+//     available: true,
+//     createdAt: new Date("2024-05-20"),
+//     updatedAt: new Date("2024-05-25"),
+//   },
+//   {
+//     id: "8",
+//     title: "To Kill a Mockingbird",
+//     author: "Harper Lee",
+//     genre: "Classic",
+//     isbn: "9780061120084",
+//     description: "A story of racial injustice and childhood innocence.",
+//     copies: 3,
+//     available: false,
+//     createdAt: new Date("2024-06-01"),
+//     updatedAt: new Date("2024-06-03"),
+//   },
+//   {
+//     id: "9",
+//     title: "The Lean Startup",
+//     author: "Eric Ries",
+//     genre: "Business",
+//     isbn: "9780307887894",
+//     description: "Entrepreneurship and innovation strategies for startups.",
+//     copies: 5,
+//     available: true,
+//     createdAt: new Date("2024-06-10"),
+//     updatedAt: new Date("2024-06-12"),
+//   },
+//   {
+//     id: "10",
+//     title: "You Don’t Know JS",
+//     author: "Kyle Simpson",
+//     genre: "Programming",
+//     isbn: "9781491904244",
+//     description: "In-depth explanation of JavaScript concepts.",
+//     copies: 6,
+//     available: true,
+//     createdAt: new Date("2024-06-20"),
+//     updatedAt: new Date("2024-06-25"),
+//   },
+// ];
 
 const AllBooks = () => {
-  const [loading, setLoading] = useState(true);
+    const {data : books, isError, isLoading} = useGetAllbookQuery(undefined, {
+      // pollingInterval : 1000,
+      refetchOnFocus : true,
+      refetchOnMountOrArgChange : true,
+      refetchOnReconnect : true
+    });
+    console.log({books, isError, isLoading});
 
-  if (loading) {
+
+  if (isLoading) {
     return (
       <>
         <div className="flex items-center justify-center min-h-[400px]">
@@ -190,7 +197,7 @@ const AllBooks = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {books.length}
+                {books.data?.length}
               </div>
             </CardContent>
           </Card>
@@ -203,7 +210,7 @@ const AllBooks = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-success">
-                {books.filter((book) => book?.available).length}
+                {books.data?.filter((book) => book?.available).length}
               </div>
             </CardContent>
           </Card>
@@ -216,7 +223,7 @@ const AllBooks = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {books.reduce((sum, book) => sum + book.copies, 0)}
+                {books.data.reduce((sum, book) => sum + book.copies, 0)}
               </div>
             </CardContent>
           </Card>
@@ -228,7 +235,7 @@ const AllBooks = () => {
             <CardTitle>All Books</CardTitle>
           </CardHeader>
           <CardContent>
-            {books.length === 0 ? (
+            {books.data.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-muted-foreground mb-4">
                   <BookPlus className="h-12 w-12 mx-auto mb-4 opacity-50" />
@@ -254,7 +261,7 @@ const AllBooks = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {books.map((book) => (
+                    {books.data.map((book) => (
                       <TableRow key={book.id}>
                         <TableCell className="font-medium">
                           {book.title}

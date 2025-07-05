@@ -22,7 +22,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Edit, Trash2, BookPlus, Eye, Plus } from "lucide-react";
-import { useGetAllbookQuery } from "@/redux/api/bookApi";
+import { useDeleteBookMutation, useGetAllbookQuery } from "@/redux/api/bookApi";
 // const books = [
 //   {
 //     id: "1",
@@ -154,9 +154,19 @@ const AllBooks = () => {
       refetchOnMountOrArgChange : true,
       refetchOnReconnect : true
     });
+    const [deleteBook] =useDeleteBookMutation();
     console.log({books, isError, isLoading});
 
-
+  const handleDelete = async (id) => {
+    console.log("delete id", id)
+    try {
+      await deleteBook(id).unwrap();
+      console.log(" Optionally, handle success (e.g., optimistic updates)")
+      // Optionally, handle success (e.g., optimistic updates)
+    } catch (error) {
+      // Handle error
+    }
+  };
   if (isLoading) {
     return (
       <>
@@ -316,6 +326,7 @@ const AllBooks = () => {
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
                                 <Button
+                            
                                   variant="ghost"
                                   size="sm"
                                   className="text-destructive"
@@ -337,7 +348,9 @@ const AllBooks = () => {
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                  <AlertDialogAction
+                                       onClick={() => handleDelete(book._id)}
+                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
                                     Delete
                                   </AlertDialogAction>
                                 </AlertDialogFooter>

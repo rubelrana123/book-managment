@@ -10,18 +10,19 @@ export const bookApi = createApi({
 
     addbook: builder.mutation({
       query: (body) => ({
-        url: "/create-book",
+        url: "/books", //need update from backend like create-bok
         method: "POST",
         body,
       }),
       invalidatesTags:["book"]
     }),
-
+    
     getAllbook:builder.query({
         query:()=>"/books",
         providesTags:["book"]
-    })
-  }),
-});
+      })
+    }),
+  });
+ 
 
 export const {useAddbookMutation,useGetAllbookQuery}=bookApi

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useForm } from "react-hook-form";
+import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,11 +19,24 @@ import {
 } from "@/components/ui/form";
 
 import { ArrowLeft, Save } from "lucide-react";
+import { useAddbookMutation } from "@/redux/api/bookApi";
 
 const CreateBook = () => {
   const navigate = useNavigate();
+  const [addbook,{data,isLoading}] = useAddbookMutation();
+  console.log("otside", data);
+    const onSubmit: SubmitHandler<FieldValues> = async(data)  =>{
+      console.log("insie", data, {...data})
+      const bookData = {
+        ...data,
+        isCompleted : false
+      }
+     const res = await addbook(bookData).unwrap()
+        console.log(" book post", res)
+       
+        form.reset();
 
-  const [loading, setLoading] = useState(false);
+    }
 
   const form = useForm({
     defaultValues: {
@@ -37,7 +50,6 @@ const CreateBook = () => {
     },
   });
 
-  const onSubmit = async () => {};
 
   return (
     <>
@@ -202,18 +214,18 @@ const CreateBook = () => {
                 <div className="flex flex-col sm:flex-row gap-4 pt-6">
                   <Button
                     type="submit"
-                    disabled={loading}
+                    disabled={isLoading}
                     className="flex items-center space-x-2"
                   >
                     <Save className="h-4 w-4" />
-                    <span>{loading ? "Adding Book..." : "Add Book"}</span>
+                    <span>{isLoading ? "Adding Book..." : "Add Book"}</span>
                   </Button>
 
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => navigate("/books")}
-                    disabled={loading}
+                    disabled={isLoading}
                   >
                     Cancel
                   </Button>

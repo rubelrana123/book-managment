@@ -1,5 +1,6 @@
 import MainLayOut from "@/MainLayout/MainLayout";
 import AllBooks from "@/components/pages/AllBooks/AllBooks";
+import BorrowSummary from "@/components/pages/BorrowSummary/BorrowSummary";
 import CreateBook from "@/components/pages/CreateBook/CreateBook";
 import Home from "@/components/pages/Home/Home";
  
@@ -21,6 +22,11 @@ const routes = createBrowserRouter([
             {
                 path : "/create-book",
                 Component : CreateBook
+
+            },
+                        {
+                path : "/borrow-summary",
+                Component : BorrowSummary
 
             }
    

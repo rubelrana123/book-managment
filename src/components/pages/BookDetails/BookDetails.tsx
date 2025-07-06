@@ -1,87 +1,54 @@
-import { useState, useEffect } from 'react';
+
 import { useParams, useNavigate, Link } from 'react-router-dom';
-// import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-// import { Book } from '@/types/book';
-// import { bookService } from '@/lib/bookService';
-// import { useToast } from '@/hooks/use-toast';
+
 import { ArrowLeft, Edit, BookPlus, Calendar, Hash, User, Tag, FileText, Copy } from 'lucide-react';
+import { useGetBookByIdQuery } from '@/redux/api/bookApi';
 
 const BookDetails = () => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const [book, setBook] = useState<Book | null>(null);
-  const [loading, setLoading] = useState(true);
+ const {id} = useParams();
 
-  useEffect(() => {
-    if (id) {
-      loadBook(id);
-    }
-  }, [id]);
+const { data : book , isLoading } = useGetBookByIdQuery(id);
+ 
+ console.log(book);
+ 
 
-  const loadBook = async (bookId: string) => {
-    try {
-      setLoading(true);
-      const bookData = await bookService.getBookById(bookId);
-      if (bookData) {
-        setBook(bookData);
-      } else {
-        toast({
-          title: 'Error',
-          description: 'Book not found',
-          variant: 'destructive'
-        });
-        navigate('/books');
-      }
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to load book details',
-        variant: 'destructive'
-      });
-      navigate('/books');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // if (isLoading) {
+  //   return (
+  //     <>
+  //       <div className="flex items-center justify-center min-h-[400px]">
+  //         <div className="text-center">
+  //           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+  //           <p className="text-muted-foreground">Loading book details...</p>
+  //         </div>
+  //       </div>
+  //     </>
+  //   );
+  // }
 
-  if (loading) {
-    return (
-      <Layout>
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Loading book details...</p>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
-
-  if (!book) {
-    return (
-      <Layout>
-        <div className="text-center py-12">
-          <p className="text-lg text-muted-foreground mb-4">Book not found</p>
-          <Button onClick={() => navigate('/books')}>Back to Library</Button>
-        </div>
-      </Layout>
-    );
-  }
+  // if (!book) {
+  //   return (
+  //     <>
+  //       <div className="text-center py-12">
+  //         <p className="text-lg text-muted-foreground mb-4">Book not found</p>
+  //         <Button onClick={() => navigate('/books')}>Back to Library</Button>
+  //       </div>
+  //     </>
+  //   );
+  // }
 
   return (
-    <Layout>
+    <>
       <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
+               {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center space-x-4">
           <Button
             variant="ghost"
-            onClick={() => navigate('/books')}
+            // onClick={() => navigate('/books')}
             className="flex items-center space-x-2"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -90,15 +57,15 @@ const BookDetails = () => {
         </div>
         
         <div className="flex items-center space-x-2">
-          <Link to={`/edit-book/${book.id}`}>
+          <Link to={`/edit-book/${book.data._id}`}>
             <Button variant="outline" className="flex items-center space-x-2">
               <Edit className="h-4 w-4" />
               <span>Edit Book</span>
             </Button>
           </Link>
           
-          {book.available && book.copies > 0 && (
-            <Link to={`/borrow/${book.id}`}>
+          {book.data.available && book.data.copies > 0 && (
+            <Link to={`/borrow/${book.data._id}`}>
               <Button className="flex items-center space-x-2">
                 <BookPlus className="h-4 w-4" />
                 <span>Borrow Book</span>
@@ -113,14 +80,14 @@ const BookDetails = () => {
         <CardHeader>
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <CardTitle className="text-2xl mb-2">{book.title}</CardTitle>
-              <p className="text-lg text-muted-foreground">by {book.author}</p>
+              <CardTitle className="text-2xl mb-2">{book.data.title}</CardTitle>
+              <p className="text-lg text-muted-foreground">by {book.data.author}</p>
             </div>
             <Badge 
-              variant={book.available ? "default" : "secondary"}
-              className={book.available ? "bg-success hover:bg-success/80" : ""}
+              variant={book.data.available ? "default" : "secondary"}
+              className={book.data.available ? "bg-success hover:bg-success/80" : ""}
             >
-              {book.available ? 'Available' : 'Unavailable'}
+              {book.data.available ? 'Available' : 'Unavailable'}
             </Badge>
           </div>
         </CardHeader>
@@ -133,7 +100,7 @@ const BookDetails = () => {
                 <Tag className="h-5 w-5 text-muted-foreground" />
                 <div>
                   <p className="font-medium text-sm text-muted-foreground">Genre</p>
-                  <p className="text-foreground">{book.genre}</p>
+                  <p className="text-foreground">{book.data.genre}</p>
                 </div>
               </div>
               
@@ -141,7 +108,7 @@ const BookDetails = () => {
                 <Hash className="h-5 w-5 text-muted-foreground" />
                 <div>
                   <p className="font-medium text-sm text-muted-foreground">ISBN</p>
-                  <p className="font-mono text-foreground">{book.isbn}</p>
+                  <p className="font-mono text-foreground">{book.data.isbn}</p>
                 </div>
               </div>
             </div>
@@ -151,7 +118,7 @@ const BookDetails = () => {
                 <Copy className="h-5 w-5 text-muted-foreground" />
                 <div>
                   <p className="font-medium text-sm text-muted-foreground">Available Copies</p>
-                  <p className="text-foreground font-semibold">{book.copies}</p>
+                  <p className="text-foreground font-semibold">{book.data.copies}</p>
                 </div>
               </div>
               
@@ -159,14 +126,14 @@ const BookDetails = () => {
                 <User className="h-5 w-5 text-muted-foreground" />
                 <div>
                   <p className="font-medium text-sm text-muted-foreground">Author</p>
-                  <p className="text-foreground">{book.author}</p>
+                  <p className="text-foreground">{book.data.author}</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Description */}
-          {book.description && (
+          {book.data.description && (
             <>
               <Separator />
               <div className="space-y-3">
@@ -175,7 +142,7 @@ const BookDetails = () => {
                   <h3 className="font-medium text-foreground">Description</h3>
                 </div>
                 <p className="text-muted-foreground leading-relaxed pl-8">
-                  {book.description}
+                  {book.data.description}
                 </p>
               </div>
             </>
@@ -188,7 +155,7 @@ const BookDetails = () => {
               <Calendar className="h-5 w-5 text-muted-foreground" />
               <div>
                 <p className="font-medium text-sm text-muted-foreground">Added to Library</p>
-                <p className="text-foreground">{book.createdAt.toLocaleDateString()}</p>
+                <p className="text-foreground">{book.data.createdAt}</p>
               </div>
             </div>
             
@@ -196,7 +163,7 @@ const BookDetails = () => {
               <Calendar className="h-5 w-5 text-muted-foreground" />
               <div>
                 <p className="font-medium text-sm text-muted-foreground">Last Updated</p>
-                <p className="text-foreground">{book.updatedAt.toLocaleDateString()}</p>
+                <p className="text-foreground">{book.data.updatedAt}</p>
               </div>
             </div>
           </div>
@@ -204,8 +171,8 @@ const BookDetails = () => {
           {/* Action Buttons */}
           <Separator />
           <div className="flex flex-col sm:flex-row gap-4">
-            {book.available && book.copies > 0 ? (
-              <Link to={`/borrow/${book.id}`} className="flex-1">
+            {book.data.available && book.data.copies > 0 ? (
+              <Link to={`/borrow/${book.data._id}`} className="flex-1">
                 <Button className="w-full flex items-center space-x-2">
                   <BookPlus className="h-4 w-4" />
                   <span>Borrow This Book</span>
@@ -219,7 +186,7 @@ const BookDetails = () => {
               </div>
             )}
             
-            <Link to={`/edit-book/${book.id}`} className="flex-1">
+            <Link to={`/edit-book/${book.data._id}`} className="flex-1">
               <Button variant="outline" className="w-full flex items-center space-x-2">
                 <Edit className="h-4 w-4" />
                 <span>Edit Book Details</span>
@@ -228,8 +195,8 @@ const BookDetails = () => {
           </div>
         </CardContent>
       </Card>
-    </div>
-    </Layout>
+      </div> 
+    </>
   );
 };
 

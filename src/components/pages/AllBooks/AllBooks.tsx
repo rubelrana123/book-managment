@@ -161,6 +161,7 @@ const AllBooks = () => {
     console.log("delete id", id)
     try {
       await deleteBook(id).unwrap();
+       
       console.log(" Optionally, handle success (e.g., optimistic updates)")
       // Optionally, handle success (e.g., optimistic updates)
     } catch (error) {
@@ -296,14 +297,14 @@ const AllBooks = () => {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex items-center justify-end space-x-2">
-                            <Link to={`/books/${book.id}`}>
+                            <Link to={`/books/${book._id}`}>
                               <Button variant="ghost" size="sm">
                                 <Eye className="h-4 w-4" />
                                 <span className="sr-only">View details</span>
                               </Button>
                             </Link>
 
-                            <Link to={`/edit-book/${book.id}`}>
+                            <Link to={`/edit-book/${book._id}`}>
                               <Button variant="ghost" size="sm">
                                 <Edit className="h-4 w-4" />
                                 <span className="sr-only">Edit book</span>

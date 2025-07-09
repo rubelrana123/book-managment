@@ -24,10 +24,11 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import toast from 'react-hot-toast';
  
- 
-import { Edit, Save } from 'lucide-react';
-import type { Book } from '@/types/book';
+import { Edit, Save } from 'lucide-react'; 
+import { useUpdatebookMutation } from '@/redux/api/bookApi';
+import type { IBook } from '@/types/book';
 
 const bookSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200, 'Title is too long'),
@@ -39,15 +40,10 @@ const bookSchema = z.object({
   available: z.boolean().optional()
 });
  
-
-interface EditBookDialogProps {
-  book: Book;
-  onBookUpdated: (updatedBook: Book) => void;
-}
-
-const EditBookDialog = ({ book, onBookUpdated }: EditBookDialogProps) => {
+ 
+const EditBookDialog = ({ book})  => {
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [updateBook, { isLoading: loading }] = useUpdatebookMutation();
  
 
   const form = useForm({
@@ -64,7 +60,7 @@ const EditBookDialog = ({ book, onBookUpdated }: EditBookDialogProps) => {
   });
 
   const onSubmit = async (data) => {
- 
+    try {
       const bookData = {
         title: data.title,
         author: data.author,
@@ -73,9 +69,17 @@ const EditBookDialog = ({ book, onBookUpdated }: EditBookDialogProps) => {
         description: data.description,
         copies: data.copies,
         available: data.available
-      }
-     console.log("bookData", bookData)
+      };
+      console.log({ id: book._id, body: bookData })
+      await updateBook({ id: book._id, body: bookData }).unwrap();
+      toast.success(`"${data.title}" has been updated successfully`
+      );
+      setOpen(false);
+      form.reset();
+    } catch (error) {
+      toast.error("SOmething is wrong");
     }
+  };
        
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,93 +9,81 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
- 
-import { BookOpen } from 'lucide-react';
-import type { Book } from '@/types/book';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+import { BookOpen, BookPlus, Pencil } from "lucide-react";
+import toast from "react-hot-toast";
+import type { Book } from "@/types/book";
+import { useBorrowBookMutation } from "@/redux/api/bookApi";
 
 interface BorrowBookDialogProps {
   book: Book;
-  onBookUpdated: (updatedBook: Book) => void;
 }
 
-const BorrowBookDialog = ({ book, onBookUpdated }: BorrowBookDialogProps) => {
+const BorrowBookDialog = ({ book }: BorrowBookDialogProps) => {
   const [open, setOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [dueDate, setDueDate] = useState('');
-  const [loading, setLoading] = useState(false);
- 
+  const [dueDate, setDueDate] = useState("");
+  const [borrowBook, { isLoading: loading }] = useBorrowBookMutation();
   const navigate = useNavigate();
-
+  /* 
+{
+  "book": "685ab2332b7d0f28c18b1c0a",
+  "quantity": 3,
+  "dueDate": "2025-07-28T00:00:00.000Z"
+} */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // if (!dueDate) {
-    //   toast({
-    //     title: 'Error',
-    //     description: 'Please select a due date',
-    //     variant: 'destructive'
-    //   });
-    //   return;
-    // }
 
-    // if (quantity > book.copies) {
-    //   toast({
-    //     title: 'Error',
-    //     description: `Only ${book.copies} copies available`,
-    //     variant: 'destructive'
-    //   });
-    //   return;
-    // }
+    if (!dueDate) {
+      toast.error("Please select a due date");
+      return;
+    }
 
-//     try {
-//       setLoading(true);
-//       const borrowData = {
-//         quantity,
-//         dueDate: new Date(dueDate)
-//       };
+    if (quantity > book.copies) {
+      toast(`Only ${book.copies} copies available`);
+      return;
+    }
 
-//       const borrowResult = await bookService.borrowBook(book.id, borrowData);
-      
-//       if (borrowResult) {
-//         // Update book copies
-//         const updatedBook = {
-//           ...book,
-//           copies: book.copies - quantity,
-//           available: book.copies - quantity > 0
-//         };
-        
-//         onBookUpdated(updatedBook);
-        
-//         toast({
-//           title: 'Success',
-//           description: `Successfully borrowed ${quantity} cop${quantity > 1 ? 'ies' : 'y'} of "${book.title}"`
-//         });
-        
-//         setOpen(false);
-//         setQuantity(1);
-//         setDueDate('');
-//         navigate('/borrow-summary');
-//       }
-//     } catch (error) {
-//       toast({
-//         title: 'Error',
-//         description: 'Failed to borrow book',
-//         variant: 'destructive'
-//       });
-//     } finally {
-//       setLoading(false);
-//     }
+    try {
+      const borrowData = {
+        quantity,
+        dueDate: new Date(dueDate),
+      };
+      console.log({
+        book: book._id,
+        quantity: quantity,
+        dueDate: new Date(dueDate),
+      });
+      await borrowBook({
+        book: book._id,
+        quantity: quantity,
+        dueDate: new Date(dueDate),
+      }).unwrap();
+
+      toast.success(
+        `Successfully borrowed ${quantity} cop${
+          quantity > 1 ? "ies" : "y"
+        } of "${book.title}"`
+      );
+
+      setOpen(false);
+      setQuantity(1);
+      setDueDate("");
+      //   navigate('/borrow-summary');
+    } catch (error) {
+      toast.error("Failed to borrow book");
+    }
   };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="flex items-center space-x-1">
-          <BookOpen className="h-3 w-3" />
-          <span className="text-xs">Borrow</span>
+
+        <Button variant="ghost" size="sm" className="text-black block">
+          <BookPlus className="h-4 w-4" />
+          <span className="sr-only">Borrow book</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -132,7 +120,7 @@ const BorrowBookDialog = ({ book, onBookUpdated }: BorrowBookDialogProps) => {
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
                 className="col-span-3"
-                min={new Date().toISOString().split('T')[0]}
+                min={new Date().toISOString().split("T")[0]}
                 required
               />
             </div>
@@ -141,11 +129,15 @@ const BorrowBookDialog = ({ book, onBookUpdated }: BorrowBookDialogProps) => {
             </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? 'Borrowing...' : 'Borrow Book'}
+              {loading ? "Borrowing..." : "Borrow Book"}
             </Button>
           </DialogFooter>
         </form>

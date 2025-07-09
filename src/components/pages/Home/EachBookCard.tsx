@@ -14,28 +14,24 @@ import { Dialog, DialogTitle } from "@radix-ui/react-dialog";
 import EditBookDialog from "../../Shared/EditBook/EditBook";
 import BorrowBookDialog from "@/components/Shared/BorrowBook/BorrowBook";
 
-export const EachBookCard = ({ book }) => {
+export const EachBookCard = ({ book})  => {
   const { title, author, genre, description, copies, _id } = book;
-  console.log(book);
+//   console.log(book);
   const [deleteBook] = useDeleteBookMutation();
-  const [updatebook,{isError,isSuccess}] = useUpdatebookMutation();
+
 
   const handleDelete = async (id) => {
-    console.log("delete id", id);
+    // console.log("delete id", id);
     try {
       await deleteBook(id).unwrap();
 
-      console.log(" Optionally, handle success (e.g., optimistic updates)");
+    //   console.log(" Optionally, handle success (e.g., optimistic updates)");
       // Optionally, handle success (e.g., optimistic updates)
     } catch (error) {
       // Handle error
     }
   };
-    const handleBookUpdated = async(updatedBook) => {
-         await updatebook({ id: book._id, data: formData }).unwrap();
-
-     
-  };
+ 
 
   return (
     <Card className="w-full max-w-sm shadow-md rounded-2xl border border-gray-200">
@@ -62,17 +58,16 @@ export const EachBookCard = ({ book }) => {
       </CardContent>
 
       <CardFooter className="flex justify-between items-center p-4">
-        <Button
-          size="sm"
-          className="bg-green-600 hover:bg-green-700 text-white"
-        >
-                                  {book.available && book.copies > 0 && (
+        <div>
+                 { book.available && book.copies > 0 && (
                             <BorrowBookDialog 
                               book={book} 
-                              onBookUpdated={handleBookUpdated}
+                             
                             />
                           )}
-        </Button>
+        </div>
+
+        
         <div className="flex gap-2">
           <Link to={`/books/${book._id}`}>
             <Button variant="outline" size="icon">
@@ -86,7 +81,6 @@ export const EachBookCard = ({ book }) => {
        
                            <EditBookDialog 
                             book={book} 
-                            onBookUpdated={handleBookUpdated}
                           />
           <Button
             onClick={() => handleDelete(_id)}

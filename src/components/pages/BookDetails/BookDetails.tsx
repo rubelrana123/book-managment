@@ -9,11 +9,12 @@ import { ArrowLeft, Edit, BookPlus, Calendar, Hash, User, Tag, FileText, Copy } 
 import { useGetBookByIdQuery } from '@/redux/api/bookApi';
 
 const BookDetails = () => {
+  const navigate = useNavigate()
  const {id} = useParams();
 
-const { data : book , isLoading } = useGetBookByIdQuery(id);
+const { data : book , isLoading } = useGetBookByIdQuery(id as string);
  
- console.log(book);
+   console.log(book);
  
 
   if (isLoading) {
@@ -29,16 +30,16 @@ const { data : book , isLoading } = useGetBookByIdQuery(id);
     );
   }
 
-  // if (!book) {
-  //   return (
-  //     <>
-  //       <div className="text-center py-12">
-  //         <p className="text-lg text-muted-foreground mb-4">Book not found</p>
-  //         <Button onClick={() => navigate('/books')}>Back to Library</Button>
-  //       </div>
-  //     </>
-  //   );
-  // }
+  if (!book) {
+    return (
+      <>
+        <div className="text-center py-12">
+          <p className="text-lg text-muted-foreground mb-4">Book not found</p>
+          <Button onClick={() => navigate('/books')}>Back to Library</Button>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -48,7 +49,7 @@ const { data : book , isLoading } = useGetBookByIdQuery(id);
         <div className="flex items-center space-x-4">
           <Button
             variant="ghost"
-            // onClick={() => navigate('/books')}
+            onClick={() => navigate('/books')}
             className="flex items-center space-x-2"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -57,7 +58,7 @@ const { data : book , isLoading } = useGetBookByIdQuery(id);
         </div>
         
         <div className="flex items-center space-x-2">
-          <Link to={`/edit-book/${book.data._id}`}>
+          <Link to={`/edit-book/${book?.data?._id}`}>
             <Button variant="outline" className="flex items-center space-x-2">
               <Edit className="h-4 w-4" />
               <span>Edit Book</span>
@@ -170,7 +171,7 @@ const { data : book , isLoading } = useGetBookByIdQuery(id);
 
           {/* Action Buttons */}
           <Separator />
-          <div className="flex flex-col sm:flex-row gap-4">
+          {/* <div className="flex flex-col sm:flex-row gap-4">
             {book.data.available && book.data.copies > 0 ? (
               <Link to={`/borrow/${book.data._id}`} className="flex-1">
                 <Button className="w-full flex items-center space-x-2">
@@ -192,7 +193,7 @@ const { data : book , isLoading } = useGetBookByIdQuery(id);
                 <span>Edit Book Details</span>
               </Button>
             </Link>
-          </div>
+          </div> */}
         </CardContent>
       </Card>
       </div> 

@@ -1,4 +1,4 @@
-import type { Book } from "@/types/book";
+import type { IBook } from "@/types/book";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const bookApi = createApi({
@@ -22,7 +22,7 @@ export const bookApi = createApi({
         query:()=>"/books",
         providesTags:["book"]
       }),
-    getBookById: builder.query<Book, string>({
+    getBookById: builder.query({
       query: (id) => `books/${id}`,
     }),
     updatebook: builder.mutation({
@@ -33,17 +33,25 @@ export const bookApi = createApi({
       }),
       invalidatesTags:["book"]
     }),
-   getBorrowSummary:builder.query({
-        query:()=>"/borrow",
-        providesTags:["borrow"]
-      }),
-   deleteBook: builder.mutation({
+      deleteBook: builder.mutation({
       query: (id) => ({
         url: `/books/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ["book"]  
     }),
+     borrowBook: builder.mutation({
+      query: (body) => ({
+        url: "/borrow", //need update from backend like create-bok
+        method: "POST",
+        body,
+      }),
+      invalidatesTags:["borrow", "book"]
+    }),
+   getBorrowSummary:builder.query({
+        query:()=>"/borrow",
+        providesTags:["borrow"]
+      }),
     }),
   });
  
@@ -54,5 +62,6 @@ export const {
   useGetBorrowSummaryQuery,
   useDeleteBookMutation,
   useGetBookByIdQuery,
-  useUpdatebookMutation
+  useUpdatebookMutation,
+  useBorrowBookMutation
 }=bookApi

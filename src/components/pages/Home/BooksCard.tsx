@@ -1,6 +1,7 @@
  
 import {  useGetAllbookQuery } from "@/redux/api/bookApi";
 import { EachBookCard } from "./EachBookCard";
+import type { IBook } from "@/types/book";
 
 export default function BooksCard() {
         const {data : books, isError, isLoading} = useGetAllbookQuery(undefined, {
@@ -22,9 +23,9 @@ export default function BooksCard() {
         );
       }
   return (
-    <div className="grid grid-cols-3 gap-5">
+    <div className="grid lg:grid-cols-3 md:grid-cols-2 md:grid-cols-1 gap-5">
         {
-            books.data.map((book) =>  <EachBookCard key={book._id} book = {book}/> )
+            books.data.map((book : IBook) =>  <EachBookCard key={book._id} book = {book}/> )
         }
   
  </div>

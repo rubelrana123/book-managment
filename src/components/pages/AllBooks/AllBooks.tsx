@@ -21,148 +21,31 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Edit, Trash2, BookPlus, Eye, Plus } from "lucide-react";
+import { Edit, Trash2, BookPlus, Eye, Plus, BookLock } from "lucide-react";
 import { useDeleteBookMutation, useGetAllbookQuery } from "@/redux/api/bookApi";
-// const books = [
-//   {
-//     id: "1",
-//     title: "Atomic Habits",
-//     author: "James Clear",
-//     genre: "Self-help",
-//     isbn: "9780735211292",
-//     description: "A guide to building good habits and breaking bad ones.",
-//     copies: 5,
-//     available: true,
-//     createdAt: new Date("2024-01-01"),
-//     updatedAt: new Date("2024-01-10"),
-//   },
-//   {
-//     id: "2",
-//     title: "The Alchemist",
-//     author: "Paulo Coelho",
-//     genre: "Fiction",
-//     isbn: "9780061122415",
-//     description:
-//       "A philosophical story about a boy's journey to fulfill his dream.",
-//     copies: 3,
-//     available: true,
-//     createdAt: new Date("2024-02-10"),
-//     updatedAt: new Date("2024-02-15"),
-//   },
-//   {
-//     id: "3",
-//     title: "1984",
-//     author: "George Orwell",
-//     genre: "Dystopian",
-//     isbn: "9780451524935",
-//     description: "A novel about a totalitarian regime and surveillance.",
-//     copies: 4,
-//     available: false,
-//     createdAt: new Date("2024-03-05"),
-//     updatedAt: new Date("2024-03-08"),
-//   },
-//   {
-//     id: "4",
-//     title: "Clean Code",
-//     author: "Robert C. Martin",
-//     genre: "Programming",
-//     isbn: "9780132350884",
-//     description: "Best practices for writing clean, maintainable code.",
-//     copies: 6,
-//     available: true,
-//     createdAt: new Date("2024-04-01"),
-//     updatedAt: new Date("2024-04-03"),
-//   },
-//   {
-//     id: "5",
-//     title: "The Pragmatic Programmer",
-//     author: "Andy Hunt & Dave Thomas",
-//     genre: "Programming",
-//     isbn: "9780201616224",
-//     description: "Tips and techniques for effective software development.",
-//     copies: 2,
-//     available: false,
-//     createdAt: new Date("2024-04-15"),
-//     updatedAt: new Date("2024-04-18"),
-//   },
-//   {
-//     id: "6",
-//     title: "Rich Dad Poor Dad",
-//     author: "Robert Kiyosaki",
-//     genre: "Finance",
-//     isbn: "9781612680194",
-//     description: "Lessons on financial independence and wealth building.",
-//     copies: 7,
-//     available: true,
-//     createdAt: new Date("2024-05-01"),
-//     updatedAt: new Date("2024-05-05"),
-//   },
-//   {
-//     id: "7",
-//     title: "Deep Work",
-//     author: "Cal Newport",
-//     genre: "Productivity",
-//     isbn: "9781455586691",
-//     description: "Strategies for focused success in a distracted world.",
-//     copies: 4,
-//     available: true,
-//     createdAt: new Date("2024-05-20"),
-//     updatedAt: new Date("2024-05-25"),
-//   },
-//   {
-//     id: "8",
-//     title: "To Kill a Mockingbird",
-//     author: "Harper Lee",
-//     genre: "Classic",
-//     isbn: "9780061120084",
-//     description: "A story of racial injustice and childhood innocence.",
-//     copies: 3,
-//     available: false,
-//     createdAt: new Date("2024-06-01"),
-//     updatedAt: new Date("2024-06-03"),
-//   },
-//   {
-//     id: "9",
-//     title: "The Lean Startup",
-//     author: "Eric Ries",
-//     genre: "Business",
-//     isbn: "9780307887894",
-//     description: "Entrepreneurship and innovation strategies for startups.",
-//     copies: 5,
-//     available: true,
-//     createdAt: new Date("2024-06-10"),
-//     updatedAt: new Date("2024-06-12"),
-//   },
-//   {
-//     id: "10",
-//     title: "You Don’t Know JS",
-//     author: "Kyle Simpson",
-//     genre: "Programming",
-//     isbn: "9781491904244",
-//     description: "In-depth explanation of JavaScript concepts.",
-//     copies: 6,
-//     available: true,
-//     createdAt: new Date("2024-06-20"),
-//     updatedAt: new Date("2024-06-25"),
-//   },
-// ];
-
+import EditBookDialog from "@/components/Shared/EditBook/EditBook";
+import BorrowBookDialog from "@/components/Shared/BorrowBook/BorrowBook";
+import type { IBook } from "@/types/book";
 const AllBooks = () => {
-    const {data : books, isError, isLoading} = useGetAllbookQuery(undefined, {
-      // pollingInterval : 1000,
-      refetchOnFocus : true,
-      refetchOnMountOrArgChange : true,
-      refetchOnReconnect : true
-    });
-    const [deleteBook] =useDeleteBookMutation();
-    console.log({books, isError, isLoading});
+  const {
+    data: books,
+    isError,
+    isLoading,
+  } = useGetAllbookQuery(undefined, {
+    // pollingInterval : 1000,
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  });
+  const [deleteBook] = useDeleteBookMutation();
+  console.log({ books, isError, isLoading });
 
-  const handleDelete = async (id) => {
-    console.log("delete id", id)
+  const handleDelete = async (id: string) => {
+    console.log("delete id", id);
     try {
       await deleteBook(id).unwrap();
-       
-      console.log(" Optionally, handle success (e.g., optimistic updates)")
+
+      console.log(" Optionally, handle success (e.g., optimistic updates)");
       // Optionally, handle success (e.g., optimistic updates)
     } catch (error) {
       // Handle error
@@ -221,7 +104,7 @@ const AllBooks = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-success">
-                {books.data?.filter((book) => book?.available).length}
+                {books.data?.filter((book: IBook) => book?.available).length}
               </div>
             </CardContent>
           </Card>
@@ -234,7 +117,10 @@ const AllBooks = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {books.data.reduce((sum, book) => sum + book.copies, 0)}
+                {books.data.reduce(
+                  (sum: number, book: IBook) => sum + book.copies,
+                  0
+                )}
               </div>
             </CardContent>
           </Card>
@@ -268,12 +154,12 @@ const AllBooks = () => {
                       <TableHead>ISBN</TableHead>
                       <TableHead>Copies</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead className=" text-center">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {books.data.map((book) => (
-                      <TableRow key={book.id}>
+                    {books.data.map((book: IBook) => (
+                      <TableRow key={book._id}>
                         <TableCell className="font-medium">
                           {book.title}
                         </TableCell>
@@ -287,12 +173,12 @@ const AllBooks = () => {
                           <Badge
                             variant={book.available ? "default" : "secondary"}
                             className={
-                              book.available
-                                ? "bg-success hover:bg-success/80"
-                                : ""
+                              book?.available
+                                ? "bg-white text-green-500"
+                                : "bg-white text-red-500 line-through"
                             }
                           >
-                            {book.available ? "Available" : "Unavailable"}
+                            {book.available ? "Available" : "available"}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
@@ -304,30 +190,37 @@ const AllBooks = () => {
                               </Button>
                             </Link>
 
-                            <Link to={`/edit-book/${book._id}`}>
-                              <Button variant="ghost" size="sm">
-                                <Edit className="h-4 w-4" />
-                                <span className="sr-only">Edit book</span>
-                              </Button>
-                            </Link>
+                            <Button variant="ghost" size="sm">
+                              <EditBookDialog book={book} />
+                            </Button>
 
-                            {book.available && book.copies > 0 && (
-                              <Link to={`/borrow/${book.id}`}>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="text-accent"
-                                >
-                                  <BookPlus className="h-4 w-4" />
-                                  <span className="sr-only">Borrow book</span>
-                                </Button>
-                              </Link>
+                            {book.available && book.copies ? (
+                              // <Button
+                              //   variant="ghost"
+                              //   size="sm"
+                              //   className="text-black block"
+                              // >
+                              //   <BookPlus className="h-4 w-4" />
+                              //   <span className="sr-only">Borrow book</span>
+                              // </Button>
+                              <>
+                                {" "}
+                                <BorrowBookDialog book={book} />
+                              </>
+                            ) : (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-red-500 block"
+                              >
+                                <BookLock className="h-4 w-4" />
+                                <span className="sr-only">Borrow book</span>
+                              </Button>
                             )}
 
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
                                 <Button
-                            
                                   variant="ghost"
                                   size="sm"
                                   className="text-destructive"
@@ -350,8 +243,9 @@ const AllBooks = () => {
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                                   <AlertDialogAction
-                                       onClick={() => handleDelete(book._id)}
-                                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                    onClick={() => handleDelete(book._id)}
+                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                  >
                                     Delete
                                   </AlertDialogAction>
                                 </AlertDialogFooter>

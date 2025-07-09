@@ -1,70 +1,108 @@
-# React + TypeScript + Vite
+# Minimal Library Management System 📚
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Project Overview
 
-Currently, two official plugins are available:
+This project is a minimal library management system built using **React**, **Redux Toolkit Query (RTK Query)**, and **TypeScript**. It enables users to:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- View a list of books
+- Perform CRUD operations on books
+- Borrow books
+- View a simple borrow summary
 
-## Expanding the ESLint configuration
+All functionality is implemented on the client side interacting with a RESTful API. This project focuses on core features without authentication, category filters, or payment integration. The goal is to showcase clean UI design, proper state management, and essential library management functionality.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Live Demo
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+[Try the live application here](https://your-live-link-here.com)  
+*Replace the URL above with your actual deployed app link.*
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Features
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 1. Public Routes 🚀
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-# book-managment
+- All pages are accessible without login or authentication.
+- Focus on essential book and borrowing features only.
+
+### 2. Book Management 🛠️
+
+- **Book List Table**  
+  Displays all books in a table with columns:  
+  `Title`, `Author`, `Genre`, `ISBN`, `Copies`, `Availability`, and `Actions`.
+
+- **Actions**  
+  - **Edit Book:** Opens a form pre-filled with book data to update info. Changes update via API and reflect instantly.  
+  - **Delete Book:** Confirmation dialog before deletion.  
+  - **Borrow Book:** Opens a form to borrow copies of the book.
+
+- **Business Logic**  
+  - If `copies` is set to 0, the book is marked as unavailable.
+
+- **Add New Book**  
+  - Button to open a form to add a new book.  
+  - Fields: `Title`, `Author`, `Genre`, `ISBN`, `Description`, `Copies`, `Available` (optional, defaults to true).  
+  - After creation, redirects to the book list and updates UI immediately.
+
+### 3. Borrow Book
+
+- Accessed from the “Borrow” button in the book list.
+- Form fields:  
+  `Quantity` (number), `Due Date` (date).
+- **Business Logic**  
+  - Quantity cannot exceed available copies.  
+  - When copies reach 0, the book is marked unavailable.
+- On successful borrow, shows a success message and redirects to the borrow summary page.
+
+### 4. Borrow Summary
+
+- Displays a list of borrowed books with total quantity borrowed for each.
+- Data is retrieved from an aggregation API.
+- Columns: `Book Title`, `ISBN`, `Total Quantity Borrowed`.
+
+---
+
+## Landing Page Components
+
+- **Navbar**  
+  Simple navigation with links to:  
+  - All Books  
+  - Add Book  
+  - Borrow Summary
+
+- **Book Table/List/Grid**  
+  Shows books with all core actions (view, edit, delete, borrow).
+
+- **Footer**  
+  Standard footer with site information or credits.
+
+---
+
+## Page List
+
+- `/books` – List all books with options to view, edit, delete, and borrow.  
+- `/create-book` – Form to add a new book.  
+- `/books/:id` – Detailed view of a single book’s information.  
+- `/borrow-summary` – Aggregated summary of all borrowed books.
+
+---
+
+## Tech Stack
+
+- React  
+- Redux Toolkit Query (RTK Query)  
+- TypeScript  
+- RESTful API (backend not included)
+
+---
+
+## Getting Started
+
+1. Clone the repository  
+2. Install dependencies (`npm install` or `yarn`)  
+3. Run the development server (`npm start` or `yarn dev`)  
+4. Connect to your RESTful API backend  
+
+ 

@@ -29,7 +29,7 @@ import toast from 'react-hot-toast';
 import { Edit, Save } from 'lucide-react'; 
 import { useUpdatebookMutation } from '@/redux/api/bookApi';
 import type { IBook } from '@/types/book';
-
+ 
 const bookSchema = z.object({
   title: z.string().min(1, 'Title is required').max(200, 'Title is too long'),
   author: z.string().min(1, 'Author is required').max(100, 'Author name is too long'),
@@ -39,9 +39,20 @@ const bookSchema = z.object({
   copies: z.number().min(0, 'Copies cannot be negative').max(1000, 'Too many copies'),
   available: z.boolean().optional()
 });
+ interface CreateBookProps {
+   book: IBook;
+ };
+ type TBookForm = {
+  title: string;
+  author: string;
+  genre: string;
+  isbn: string;
+  description?: string;
+  copies: number;
+  available?: boolean;
+};
  
- 
-const EditBookDialog = ({ book})  => {
+const EditBookDialog = ({ book} : CreateBookProps)  => {
   const [open, setOpen] = useState(false);
   const [updateBook, { isLoading: loading }] = useUpdatebookMutation();
  
@@ -59,7 +70,7 @@ const EditBookDialog = ({ book})  => {
     }
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data : TBookForm) => {
     try {
       const bookData = {
         title: data.title,
@@ -149,7 +160,7 @@ const EditBookDialog = ({ book})  => {
                   <FormItem>
                     <FormLabel>ISBN *</FormLabel>
                     <FormControl>
-                      <Input placeholder="978-0-123456-78-9" {...field} />
+                      <Input placeholder="00000000000" {...field} />
                     </FormControl>
                     <FormDescription>
                       Enter the 10 or 13 digit ISBN

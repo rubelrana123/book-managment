@@ -42,8 +42,8 @@ const bookSchema = z.object({
   ]),
   isbn: z
     .string()
-    .min(10, "ISBN must be at least 10 characters")
-    .max(13, "ISBN must be no more than 13 characters"),
+    .min(10, "ISBN must be at least 10 number")
+    .max(13, "ISBN must be no more than 13 number"),
   description: z.string().optional(),
   copies: z
     .number({

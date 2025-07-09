@@ -1,4 +1,4 @@
-import { Book } from "lucide-react";
+import { BookOpenText } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -8,7 +8,7 @@ const Footer = () => {
         {/* Logo & About */}
         <div>
             <Link to="/" className="flex items-center space-x-2">
-            <Book className="h-8 w-8 text-primary" />
+            <BookOpenText className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold text-foreground">LibraryHub</span>
           </Link>
           <p className="mt-2 text-sm">

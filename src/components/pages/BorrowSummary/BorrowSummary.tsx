@@ -10,7 +10,7 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
-import { BarChart3, BookPlus, Plus } from 'lucide-react';
+import { BarChart3, BookPlus } from 'lucide-react';
 import { useGetBorrowSummaryQuery } from '@/redux/api/bookApi';
 
 interface IBorrowSummary {
@@ -19,7 +19,7 @@ interface IBorrowSummary {
 }
 
 const BorrowSummary = () => {
- const {data, isLoading,isError} =useGetBorrowSummaryQuery(undefined);;
+ const {data, isLoading} =useGetBorrowSummaryQuery(undefined);;
  const borrowedBooks = data?.data || [];
   if (isLoading) {
     return (

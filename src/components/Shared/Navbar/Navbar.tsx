@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Book, Plus, BarChart3 } from 'lucide-react';
+import { Book, Plus, BarChart3, BookOpenText } from 'lucide-react';
 
 const Navbar = () => {
   const location = useLocation();
@@ -17,7 +17,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <Book className="h-8 w-8 text-primary" />
+            <BookOpenText className="h-8 w-8 text-primary" />
             <span className="text-xl font-bold text-foreground">LibraryHub</span>
           </Link>
 

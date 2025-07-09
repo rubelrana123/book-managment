@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { BookOpen, BookPlus, Pencil } from "lucide-react";
+import {  BookPlus} from "lucide-react";
 import toast from "react-hot-toast";
 import type { IBook } from "@/types/book";
 import { useBorrowBookMutation } from "@/redux/api/bookApi";
@@ -28,12 +28,7 @@ const BorrowBookDialog = ({ book }: BorrowBookDialogProps) => {
   const [dueDate, setDueDate] = useState("");
   const [borrowBook, { isLoading: loading }] = useBorrowBookMutation();
   const navigate = useNavigate();
-  /* 
-{
-  "book": "685ab2332b7d0f28c18b1c0a",
-  "quantity": 3,
-  "dueDate": "2025-07-28T00:00:00.000Z"
-} */
+ 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 

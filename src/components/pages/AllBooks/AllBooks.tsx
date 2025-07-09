@@ -21,46 +21,46 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Edit, Trash2, BookPlus, Eye, Plus, BookLock } from "lucide-react";
+import { Trash2, BookPlus, Eye, Plus, BookLock } from "lucide-react";
 import { useDeleteBookMutation, useGetAllbookQuery } from "@/redux/api/bookApi";
 import EditBookDialog from "@/components/Shared/EditBook/EditBook";
 import BorrowBookDialog from "@/components/Shared/BorrowBook/BorrowBook";
 import type { IBook } from "@/types/book";
 import { useState } from "react";
+import toast from "react-hot-toast";
 const AllBooks = () => {
-  const {
-    data ,
-    isError,
-    isLoading,
-  } = useGetAllbookQuery(undefined, {
-    // pollingInterval : 1000,
+  const { data, isLoading } = useGetAllbookQuery(undefined, {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
   });
   const [deleteBook] = useDeleteBookMutation();
-    const [currentPage, setCurrentPage] = useState(1);
-    const booksPerPage = 5;
-  
-    const books = data?.data || [];
-    const totalPages = Math.ceil(books.length / booksPerPage);
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const booksPerPage = 5;
 
-    const indexOfLastBook = currentPage * booksPerPage;
-    const indexOfFirstBook = indexOfLastBook - booksPerPage;
-    const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
+  const books = data?.data || [];
+  const totalPages = Math.ceil(books.length / booksPerPage);
 
-  const handleDelete = async (id: string) => {
-    console.log("delete id", id);
-    try {
-      await deleteBook(id).unwrap();
+  const indexOfLastBook = currentPage * booksPerPage;
+  const indexOfFirstBook = indexOfLastBook - booksPerPage;
+  const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
 
-      console.log(" Optionally, handle success (e.g., optimistic updates)");
-      // Optionally, handle success (e.g., optimistic updates)
-    } catch (error) {
-      // Handle error
-    }
-  };
+const handleDelete = async (id: string) => {
+  try {
+    await deleteBook(id).unwrap();
+
+    toast.success("Book deleted successfully 📚❌");
+
+    // Optionally, you can also refresh the data here
+  } catch (error: any) {
+    console.error("Delete failed:", error);
+
+    toast.error(
+      error?.data?.message || "Failed to delete the book. Please try again."
+    );
+  }
+};
+
   if (isLoading) {
     return (
       <>
@@ -205,14 +205,6 @@ const AllBooks = () => {
                             </Button>
 
                             {book.available && book.copies ? (
-                              // <Button
-                              //   variant="ghost"
-                              //   size="sm"
-                              //   className="text-black block"
-                              // >
-                              //   <BookPlus className="h-4 w-4" />
-                              //   <span className="sr-only">Borrow book</span>
-                              // </Button>
                               <>
                                 {" "}
                                 <BorrowBookDialog book={book} />
@@ -269,64 +261,66 @@ const AllBooks = () => {
                 </Table>
               </div>
             )}
-
-            
           </CardContent>
         </Card>
 
-
-
-
-              <div className="text-center my-10">
-             {/* Pagination */}
-<div className="flex justify-center items-center gap-2 flex-wrap mt-10">
-  {/* Previous Button */}
-  <button
-    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-    disabled={currentPage === 1}
-    className={`px-3 py-1 text-sm font-medium rounded-md border 
-      ${currentPage === 1 
-        ? "bg-gray-200 text-gray-500 cursor-not-allowed" 
-        : "bg-green-500 text-white hover:bg-green-600 border-green-500"}
+        <div className="text-center my-10">
+          {/* Pagination */}
+          <div className="flex justify-center items-center gap-2 flex-wrap mt-10">
+            {/* Previous Button */}
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className={`px-3 py-1 text-sm font-medium rounded-md border 
+      ${
+        currentPage === 1
+          ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+          : "bg-green-500 text-white hover:bg-green-600 border-green-500"
+      }
     `}
-  >
-    Previous
-  </button>
+            >
+              Previous
+            </button>
 
-  {/* Page Buttons */}
-  {[...Array(totalPages)].map((_, i) => {
-    const page = i + 1;
-    const isActive = currentPage === page;
-    return (
-      <button
-        key={i}
-        onClick={() => setCurrentPage(page)}
-        className={`px-3 py-1 text-sm font-medium rounded-md border transition-all duration-150
-          ${isActive 
-            ? "bg-green-600 text-white border-green-600" 
-            : "bg-white text-gray-800 border-gray-300 hover:bg-green-100"}
+            {/* Page Buttons */}
+            {[...Array(totalPages)].map((_, i) => {
+              const page = i + 1;
+              const isActive = currentPage === page;
+              return (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-3 py-1 text-sm font-medium rounded-md border transition-all duration-150
+          ${
+            isActive
+              ? "bg-green-600 text-white border-green-600"
+              : "bg-white text-gray-800 border-gray-300 hover:bg-green-100"
+          }
         `}
-      >
-        {page}
-      </button>
-    );
-  })}
+                >
+                  {page}
+                </button>
+              );
+            })}
 
-  {/* Next Button */}
-  <button
-    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-    disabled={currentPage === totalPages}
-    className={`px-3 py-1 text-sm font-medium rounded-md border 
-      ${currentPage === totalPages 
-        ? "bg-gray-200 text-gray-500 cursor-not-allowed" 
-        : "bg-green-500 text-white hover:bg-green-600 border-green-500"}
+            {/* Next Button */}
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              className={`px-3 py-1 text-sm font-medium rounded-md border 
+      ${
+        currentPage === totalPages
+          ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+          : "bg-green-500 text-white hover:bg-green-600 border-green-500"
+      }
     `}
-  >
-    Next
-  </button>
-</div>
-
-      </div>
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );

@@ -1,12 +1,10 @@
 import { useGetAllbookQuery } from "@/redux/api/bookApi";
 import { EachBookCard } from "./EachBookCard";
 import type { IBook } from "@/types/book";
-import { Link } from "react-router";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 export default function BooksCard() {
-  const { data, isError, isLoading } = useGetAllbookQuery(
+  const { data, isLoading } = useGetAllbookQuery(
     { limit: 6 },
     {
       // pollingInterval : 1000,
@@ -39,6 +37,9 @@ export default function BooksCard() {
   }
   return (
     <div>
+      <h1 className="text-center font-stretch-extra-condensed text-4xl m-4 border-b-2">
+        Explore All Books
+      </h1>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5">
         {currentBooks.map((book: IBook) => (
           <EachBookCard key={book._id} book={book} />

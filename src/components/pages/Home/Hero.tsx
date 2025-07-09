@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { BarChart3, Book, Plus } from 'lucide-react';
+import { BarChart3, Book, BookOpenText, Plus } from 'lucide-react';
 import { Link } from 'react-router';
  
 
@@ -32,7 +32,7 @@ export default function Hero() {
               <div className="text-center space-y-6 py-12">
           <div className="flex justify-center mb-6">
             <div className="p-4 bg-primary text-primary-foreground rounded-full">
-              <Book className="h-12 w-12" />
+              <BookOpenText className="h-12 w-12" />
             </div>
           </div>
           
@@ -41,11 +41,11 @@ export default function Hero() {
           </h1>
           
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            A professional book management system designed to help you organize, track, 
+            A professional Libary management system designed to help you organize, track, 
             and manage your library collection with ease and efficiency.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
+          <div className="flex flex-col justify-center sm:flex-row sm:justify-center align-middle gap-4  pt-6">
             {quickActions.map((action) => {
               const Icon = action.icon;
               return (

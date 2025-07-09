@@ -1,23 +1,22 @@
-import type { IBook } from "@/types/book";
+
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const bookApi = createApi({
   reducerPath: "bookApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api",
+    baseUrl: "https://libary-managment.vercel.app/api",
   }),
   tagTypes: ["book","borrow"],
   endpoints: (builder) => ({
 
     addbook: builder.mutation({
       query: (body) => ({
-        url: "/books", //need update from backend like create-book
+        url: "/books",
         method: "POST",
         body,
       }),
       invalidatesTags:["book"]
     }),
-    // filter=SCIENCE&sortBy=createdAt&sort=desc&limit=5
     getAllbook:builder.query({
         query:()=>"/books",
         providesTags:["book"]

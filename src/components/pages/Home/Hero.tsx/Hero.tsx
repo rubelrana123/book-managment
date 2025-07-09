@@ -37,7 +37,7 @@ export default function Hero() {
           </div>
           
           <h1 className="text-4xl md:text-6xl font-bold text-foreground">
-            Welcome to <span className="text-primary">LibraryPro</span>
+            Welcome to <span className="text-primary">LibraryHub</span>
           </h1>
           
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">

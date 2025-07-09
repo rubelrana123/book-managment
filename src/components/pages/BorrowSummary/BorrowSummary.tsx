@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+ 
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,19 +10,17 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
-import { BarChart3, BookPlus, DatabaseZapIcon, Plus } from 'lucide-react';
+import { BarChart3, BookPlus, Plus } from 'lucide-react';
 import { useGetBorrowSummaryQuery } from '@/redux/api/bookApi';
 
-interface BorrowSummary {
-  bookTitle: string;
-  isbn: string;
+interface IBorrowSummary {
+  book : {title : string, isbn : string} 
   totalQuantity: number;
 }
 
 const BorrowSummary = () => {
  const {data, isLoading,isError} =useGetBorrowSummaryQuery(undefined);;
- console.log(data)
-
+ const borrowedBooks = data?.data || [];
   if (isLoading) {
     return (
       <>
@@ -36,9 +34,6 @@ const BorrowSummary = () => {
     );
   }
 
-//   const totalBorrowedBooks = summary.reduce((sum, item) => sum + item.totalQuantity, 0);
-//   const uniqueBooks = summary.length;
-
   return (
     <>
       <div className="space-y-6">
@@ -47,20 +42,6 @@ const BorrowSummary = () => {
         <div>
           <h1 className="text-3xl font-bold text-foreground">Borrow Summary</h1>
           <p className="text-muted-foreground">Overview of all borrowed books</p>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Link to="/books">
-            <Button variant="outline" className="flex items-center space-x-2">
-              <BookPlus className="h-4 w-4" />
-              <span>Browse Books</span>
-            </Button>
-          </Link>
-          <Link to="/create-book">
-            <Button className="flex items-center space-x-2">
-              <Plus className="h-4 w-4" />
-              <span>Add Book</span>
-            </Button>
-          </Link>
         </div>
       </div>
  
@@ -74,7 +55,7 @@ const BorrowSummary = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {data.data.length === 0 ? (
+          {borrowedBooks.length === 0 ? (
             <div className="text-center py-12">
               <div className="text-muted-foreground mb-4">
                 <BookPlus className="h-12 w-12 mx-auto mb-4 opacity-50" />
@@ -96,9 +77,9 @@ const BorrowSummary = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data.data
-                    .map((item, index) => (
-                    <TableRow key={`${item.isbn}-${index}`}>
+                  {borrowedBooks
+                    .map((item : IBorrowSummary , index: any) => (
+                    <TableRow key={`${item.book.isbn}-${index}`}>
                       <TableCell className="font-medium">{item.book.title}</TableCell>
                       <TableCell className="font-mono text-sm">{item.book.isbn}</TableCell>
                       <TableCell className="text-right">

@@ -9,7 +9,7 @@ const Footer = () => {
         <div>
             <Link to="/" className="flex items-center space-x-2">
             <Book className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-foreground">LibraryPro</span>
+            <span className="text-xl font-bold text-foreground">LibraryHub</span>
           </Link>
           <p className="mt-2 text-sm">
             Your digital library for managing books with ease — track, update, and organize your collection seamlessly.

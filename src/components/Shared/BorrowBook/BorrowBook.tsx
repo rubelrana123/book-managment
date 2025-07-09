@@ -15,11 +15,11 @@ import { Label } from "@/components/ui/label";
 
 import { BookOpen, BookPlus, Pencil } from "lucide-react";
 import toast from "react-hot-toast";
-import type { Book } from "@/types/book";
+import type { IBook } from "@/types/book";
 import { useBorrowBookMutation } from "@/redux/api/bookApi";
 
 interface BorrowBookDialogProps {
-  book: Book;
+  book: IBook;
 }
 
 const BorrowBookDialog = ({ book }: BorrowBookDialogProps) => {
@@ -43,15 +43,11 @@ const BorrowBookDialog = ({ book }: BorrowBookDialogProps) => {
     }
 
     if (quantity > book.copies) {
-      toast(`Only ${book.copies} copies available`);
+      toast.error(`Only ${book.copies} copies available`);
       return;
     }
 
     try {
-      const borrowData = {
-        quantity,
-        dueDate: new Date(dueDate),
-      };
       console.log({
         book: book._id,
         quantity: quantity,
@@ -60,7 +56,7 @@ const BorrowBookDialog = ({ book }: BorrowBookDialogProps) => {
       await borrowBook({
         book: book._id,
         quantity: quantity,
-        dueDate: new Date(dueDate),
+        dueDate: new Date(dueDate).toISOString(),
       }).unwrap();
 
       toast.success(
@@ -72,7 +68,7 @@ const BorrowBookDialog = ({ book }: BorrowBookDialogProps) => {
       setOpen(false);
       setQuantity(1);
       setDueDate("");
-      //   navigate('/borrow-summary');
+        navigate('/borrow-summary');
     } catch (error) {
       toast.error("Failed to borrow book");
     }

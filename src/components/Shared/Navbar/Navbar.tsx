@@ -18,7 +18,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <Book className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-foreground">LibraryPro</span>
+            <span className="text-xl font-bold text-foreground">LibraryHub</span>
           </Link>
 
           {/* Navigation Links */}

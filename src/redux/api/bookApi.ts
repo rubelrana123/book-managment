@@ -11,13 +11,13 @@ export const bookApi = createApi({
 
     addbook: builder.mutation({
       query: (body) => ({
-        url: "/books", //need update from backend like create-bok
+        url: "/books", //need update from backend like create-book
         method: "POST",
         body,
       }),
       invalidatesTags:["book"]
     }),
-    
+    // filter=SCIENCE&sortBy=createdAt&sort=desc&limit=5
     getAllbook:builder.query({
         query:()=>"/books",
         providesTags:["book"]
@@ -42,7 +42,7 @@ export const bookApi = createApi({
     }),
      borrowBook: builder.mutation({
       query: (body) => ({
-        url: "/borrow", //need update from backend like create-bok
+        url: "/borrow",
         method: "POST",
         body,
       }),

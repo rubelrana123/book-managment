@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 
 import { ArrowLeft, Edit, BookPlus, Calendar, Hash, User, Tag, FileText, Copy } from 'lucide-react';
 import { useGetBookByIdQuery } from '@/redux/api/bookApi';
+import BorrowBookDialog from '@/components/Shared/BorrowBook/BorrowBook';
 
 const BookDetails = () => {
   const navigate = useNavigate()
@@ -57,23 +58,7 @@ const { data : book , isLoading } = useGetBookByIdQuery(id as string);
           </Button>
         </div>
         
-        <div className="flex items-center space-x-2">
-          <Link to={`/edit-book/${book?.data?._id}`}>
-            <Button variant="outline" className="flex items-center space-x-2">
-              <Edit className="h-4 w-4" />
-              <span>Edit Book</span>
-            </Button>
-          </Link>
-          
-          {book.data.available && book.data.copies > 0 && (
-            <Link to={`/borrow/${book.data._id}`}>
-              <Button className="flex items-center space-x-2">
-                <BookPlus className="h-4 w-4" />
-                <span>Borrow Book</span>
-              </Button>
-            </Link>
-          )}
-        </div>
+ 
       </div>
 
       {/* Book Details */}

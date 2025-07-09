@@ -26,9 +26,10 @@ import { useDeleteBookMutation, useGetAllbookQuery } from "@/redux/api/bookApi";
 import EditBookDialog from "@/components/Shared/EditBook/EditBook";
 import BorrowBookDialog from "@/components/Shared/BorrowBook/BorrowBook";
 import type { IBook } from "@/types/book";
+import { useState } from "react";
 const AllBooks = () => {
   const {
-    data: books,
+    data ,
     isError,
     isLoading,
   } = useGetAllbookQuery(undefined, {
@@ -38,7 +39,16 @@ const AllBooks = () => {
     refetchOnReconnect: true,
   });
   const [deleteBook] = useDeleteBookMutation();
-  console.log({ books, isError, isLoading });
+    const [currentPage, setCurrentPage] = useState(1);
+    const booksPerPage = 5;
+  
+    const books = data?.data || [];
+    const totalPages = Math.ceil(books.length / booksPerPage);
+  
+
+    const indexOfLastBook = currentPage * booksPerPage;
+    const indexOfFirstBook = indexOfLastBook - booksPerPage;
+    const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
 
   const handleDelete = async (id: string) => {
     console.log("delete id", id);
@@ -91,7 +101,7 @@ const AllBooks = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {books.data?.length}
+                {books?.length}
               </div>
             </CardContent>
           </Card>
@@ -104,7 +114,7 @@ const AllBooks = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-success">
-                {books.data?.filter((book: IBook) => book?.available).length}
+                {books?.filter((book: IBook) => book?.available).length}
               </div>
             </CardContent>
           </Card>
@@ -117,7 +127,7 @@ const AllBooks = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-foreground">
-                {books.data.reduce(
+                {books.reduce(
                   (sum: number, book: IBook) => sum + book.copies,
                   0
                 )}
@@ -132,7 +142,7 @@ const AllBooks = () => {
             <CardTitle>All Books</CardTitle>
           </CardHeader>
           <CardContent>
-            {books.data.length === 0 ? (
+            {books.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-muted-foreground mb-4">
                   <BookPlus className="h-12 w-12 mx-auto mb-4 opacity-50" />
@@ -158,7 +168,7 @@ const AllBooks = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {books.data.map((book: IBook) => (
+                    {currentBooks.map((book: IBook) => (
                       <TableRow key={book._id}>
                         <TableCell className="font-medium">
                           {book.title}
@@ -259,8 +269,64 @@ const AllBooks = () => {
                 </Table>
               </div>
             )}
+
+            
           </CardContent>
         </Card>
+
+
+
+
+              <div className="text-center my-10">
+             {/* Pagination */}
+<div className="flex justify-center items-center gap-2 flex-wrap mt-10">
+  {/* Previous Button */}
+  <button
+    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+    disabled={currentPage === 1}
+    className={`px-3 py-1 text-sm font-medium rounded-md border 
+      ${currentPage === 1 
+        ? "bg-gray-200 text-gray-500 cursor-not-allowed" 
+        : "bg-green-500 text-white hover:bg-green-600 border-green-500"}
+    `}
+  >
+    Previous
+  </button>
+
+  {/* Page Buttons */}
+  {[...Array(totalPages)].map((_, i) => {
+    const page = i + 1;
+    const isActive = currentPage === page;
+    return (
+      <button
+        key={i}
+        onClick={() => setCurrentPage(page)}
+        className={`px-3 py-1 text-sm font-medium rounded-md border transition-all duration-150
+          ${isActive 
+            ? "bg-green-600 text-white border-green-600" 
+            : "bg-white text-gray-800 border-gray-300 hover:bg-green-100"}
+        `}
+      >
+        {page}
+      </button>
+    );
+  })}
+
+  {/* Next Button */}
+  <button
+    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+    disabled={currentPage === totalPages}
+    className={`px-3 py-1 text-sm font-medium rounded-md border 
+      ${currentPage === totalPages 
+        ? "bg-gray-200 text-gray-500 cursor-not-allowed" 
+        : "bg-green-500 text-white hover:bg-green-600 border-green-500"}
+    `}
+  >
+    Next
+  </button>
+</div>
+
+      </div>
       </div>
     </>
   );

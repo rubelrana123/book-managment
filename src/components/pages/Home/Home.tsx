@@ -1,6 +1,7 @@
 
-import Hero from './Hero.tsx/Hero'
+ 
 import BooksCard from './BooksCard'
+import Hero from './Hero'
 
 export default function Home() {
   return (

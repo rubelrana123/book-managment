@@ -4,12 +4,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import {
-  BookOpenText,
-  Eye,
-  Trash2,
-  BookLock,
-} from "lucide-react";
+import { BookOpenText, Eye, Trash2, BookLock } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,9 +17,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  useDeleteBookMutation,
-} from "@/redux/api/bookApi";
+import { useDeleteBookMutation } from "@/redux/api/bookApi";
 import { Link } from "react-router-dom";
 import EditBookDialog from "../../Shared/EditBook/EditBook";
 import BorrowBookDialog from "@/components/Shared/BorrowBook/BorrowBook";
@@ -36,7 +29,7 @@ interface EachBookCardProps {
 }
 
 export const EachBookCard = ({ book }: EachBookCardProps) => {
-  const { title, author, genre, description, copies, _id } = book;
+  const { title, author, genre, description, _id,available,copies} = book;
   const [deleteBook] = useDeleteBookMutation();
 
   const handleDelete = async (id: string) => {
@@ -68,7 +61,7 @@ export const EachBookCard = ({ book }: EachBookCardProps) => {
           </h2>
           <p className="text-sm italic opacity-90">{author}</p>
         </div>
-      </CardHeader>
+      </CardHeader>vercel --prod
 
       {/* Card Content */}
       <CardContent className="p-4 space-y-2">
@@ -88,7 +81,7 @@ export const EachBookCard = ({ book }: EachBookCardProps) => {
       <CardFooter className="flex justify-between items-center px-4 pb-4 pt-0">
         {/* Borrow / Not Available */}
         <div>
-          {book.available && book.copies > 0 ? (
+          { available &&  copies > 0 ? (
             <BorrowBookDialog book={book} />
           ) : (
             <Button
@@ -105,7 +98,7 @@ export const EachBookCard = ({ book }: EachBookCardProps) => {
 
         {/* Action buttons */}
         <div className="flex gap-2">
-          <Link to={`/books/${book._id}`}>
+          <Link to={`/books/${_id}`}>
             <Button variant="outline" size="icon">
               <Eye className="h-4 w-4" />
             </Button>
@@ -113,39 +106,32 @@ export const EachBookCard = ({ book }: EachBookCardProps) => {
 
           <EditBookDialog book={book} />
 
-                          <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="text-destructive"
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                  <span className="sr-only">Delete book</span>
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>
-                                    Are you sure?
-                                  </AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    This will permanently delete "{book.title}"
-                                    from your library. This action cannot be
-                                    undone.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => handleDelete(book._id)}
-                                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                                  >
-                                    Delete
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" size="sm" className="text-destructive">
+                <Trash2 className="h-4 w-4" />
+                <span className="sr-only">Delete book</span>
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently delete "{title}" from your library.
+                  This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => handleDelete(_id)}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </CardFooter>
     </Card>

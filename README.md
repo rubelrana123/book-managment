@@ -13,10 +13,13 @@ All functionality is implemented on the client side interacting with a RESTful A
 
 ---
 
-## Live Demo
+## Live URL
 
-[Try the live application here](https://your-live-link-here.com)  
-*Replace the URL above with your actual deployed app link.*
+[Try the live application here](https://book-managment-client.vercel.app/)  
+[Try the live API here](https://libary-managment.vercel.app/api/)  
+
+[check the github backend link here](https://github.com/rubelrana123/libary-managment)  
+ 
 
 ---
 

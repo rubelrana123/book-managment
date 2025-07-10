@@ -29,21 +29,23 @@ import type { IBook } from "@/types/book";
 import { useState } from "react";
 import toast from "react-hot-toast";
 const AllBooks = () => {
-  const { data, isLoading } = useGetAllbookQuery(undefined, {
+  const [deleteBook] = useDeleteBookMutation();
+const [currentPage, setCurrentPage] = useState(1);
+const booksPerPage = 6;
+
+const { data, isLoading } = useGetAllbookQuery(
+  { page: currentPage, limit: booksPerPage },
+  {
     refetchOnFocus: true,
     refetchOnMountOrArgChange: true,
     refetchOnReconnect: true,
-  });
-  const [deleteBook] = useDeleteBookMutation();
-  const [currentPage, setCurrentPage] = useState(1);
-  const booksPerPage = 5;
+  }
+);
 
-  const books = data?.data || [];
-  const totalPages = Math.ceil(books.length / booksPerPage);
+const books = data?.data || [];
+const totalPages = data?.meta?.totalPages || 1;
 
-  const indexOfLastBook = currentPage * booksPerPage;
-  const indexOfFirstBook = indexOfLastBook - booksPerPage;
-  const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
+
 
 const handleDelete = async (id: string) => {
   try {
@@ -168,7 +170,7 @@ const handleDelete = async (id: string) => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {currentBooks.map((book: IBook) => (
+                    {books?.map((book: IBook) => (
                       <TableRow key={book._id}>
                         <TableCell className="font-medium">
                           {book.title}

@@ -4,24 +4,21 @@ import type { IBook } from "@/types/book";
 import { useState } from "react";
 
 export default function BooksCard() {
-  const { data, isLoading } = useGetAllbookQuery(
-    { limit: 6 },
-    {
-      // pollingInterval : 1000,
-      refetchOnFocus: true,
-      refetchOnMountOrArgChange: true,
-      refetchOnReconnect: true,
-    }
-  );
-  const [currentPage, setCurrentPage] = useState(1);
-  const booksPerPage = 6;
+const [currentPage, setCurrentPage] = useState(1);
+const booksPerPage = 6;
 
-  const books = data?.data || [];
-  const totalPages = Math.ceil(books.length / booksPerPage);
+const { data, isLoading } = useGetAllbookQuery(
+  { page: currentPage, limit: booksPerPage },
+  {
+    refetchOnFocus: true,
+    refetchOnMountOrArgChange: true,
+    refetchOnReconnect: true,
+  }
+);
 
-  const indexOfLastBook = currentPage * booksPerPage;
-  const indexOfFirstBook = indexOfLastBook - booksPerPage;
-  const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
+const books = data?.data || [];
+const totalPages = data?.meta?.totalPages || 1;
+
 
   if (isLoading) {
     return (
@@ -41,7 +38,7 @@ export default function BooksCard() {
         Explore All Books
       </h1>
       <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5">
-        {currentBooks.map((book: IBook) => (
+        {books.map((book: IBook) => (
           <EachBookCard key={book._id} book={book} />
         ))}
       </div>
